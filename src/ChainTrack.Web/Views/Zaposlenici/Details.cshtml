@@ -1,0 +1,38 @@
+@model Zaposlenik
+@{
+    ViewData["Title"] = "Zaposlenik - " + Model.PunoIme;
+}
+
+<h1 class="h3 mb-3">Zaposlenik: @Model.PunoIme</h1>
+
+<div class="card" style="max-width: 640px;">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-4">Ime i prezime</dt>
+            <dd class="col-sm-8">@Model.PunoIme</dd>
+
+            <dt class="col-sm-4">OIB</dt>
+            <dd class="col-sm-8"><code>@Model.Oib</code></dd>
+
+            <dt class="col-sm-4">Datum zaposlenja</dt>
+            <dd class="col-sm-8">@Model.DatumZaposlenja.ToString("dd.MM.yyyy.")</dd>
+
+            <dt class="col-sm-4">Plaća</dt>
+            <dd class="col-sm-8">@Model.Placa.ToString("0.00") &euro;</dd>
+
+            <dt class="col-sm-4">Tip zaposlenika</dt>
+            <dd class="col-sm-8">@(Model.Tip?.Naziv ?? "-")</dd>
+
+            <dt class="col-sm-4">Lokacija</dt>
+            <dd class="col-sm-8">@(Model.Lokacija?.Naziv ?? "-")</dd>
+
+            <dt class="col-sm-4">Status</dt>
+            <dd class="col-sm-8">@Model.Status</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Uredi</a>
+    <a asp-action="Index" class="btn btn-outline-secondary">Natrag na popis</a>
+</div>

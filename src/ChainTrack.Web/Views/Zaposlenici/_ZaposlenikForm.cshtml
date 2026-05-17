@@ -1,0 +1,54 @@
+@*
+    Djelomični prikaz (partial) - polja obrasca zaposlenika.
+    Koristi se na ekranima Create i Edit.
+*@
+@model ZaposlenikViewModel
+
+<input type="hidden" asp-for="Id" />
+<div class="row g-3">
+    <div class="col-md-6">
+        <label asp-for="Ime" class="form-label"></label>
+        <input asp-for="Ime" class="form-control" />
+        <span asp-validation-for="Ime" class="text-danger"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Prezime" class="form-label"></label>
+        <input asp-for="Prezime" class="form-control" />
+        <span asp-validation-for="Prezime" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Oib" class="form-label"></label>
+        <input asp-for="Oib" class="form-control" maxlength="11" placeholder="11 znamenki" />
+        <span asp-validation-for="Oib" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="DatumZaposlenja" class="form-label"></label>
+        <input asp-for="DatumZaposlenja" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+        <span asp-validation-for="DatumZaposlenja" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Placa" class="form-label"></label>
+        <input asp-for="Placa" type="number" step="0.01" min="0" class="form-control" />
+        <span asp-validation-for="Placa" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        @* Padajuća lista za odabir stranog ključa - tip zaposlenika. *@
+        <label asp-for="TipId" class="form-label"></label>
+        <select asp-for="TipId" asp-items="@(ViewBag.Tipovi as SelectList)" class="form-select">
+            <option value="">-- odaberite tip --</option>
+        </select>
+        <span asp-validation-for="TipId" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        @* Padajuća lista za odabir stranog ključa - lokacija. *@
+        <label asp-for="LokacijaId" class="form-label"></label>
+        <select asp-for="LokacijaId" asp-items="@(ViewBag.Lokacije as SelectList)" class="form-select">
+            <option value="">-- odaberite lokaciju --</option>
+        </select>
+        <span asp-validation-for="LokacijaId" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Status" class="form-label"></label>
+        <select asp-for="Status" asp-items="Html.GetEnumSelectList<StatusZaposlenika>()" class="form-select"></select>
+    </div>
+</div>

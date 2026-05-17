@@ -1,0 +1,23 @@
+@model ZaposlenikViewModel
+@{
+    ViewData["Title"] = "Uredi zaposlenika";
+}
+
+<h1 class="h3 mb-3">Uredi zaposlenika</h1>
+
+<div class="card" style="max-width: 860px;">
+    <div class="card-body">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <partial name="_ZaposlenikForm" model="Model" />
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Spremi promjene</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Odustani</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

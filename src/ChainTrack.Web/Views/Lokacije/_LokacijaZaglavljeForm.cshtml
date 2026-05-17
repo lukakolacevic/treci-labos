@@ -1,0 +1,42 @@
+@*
+    Djelomični prikaz (partial) - polja zaglavlja (lokacije).
+    Koristi se na ekranu Create i kao master dio složenog ekrana Details.
+*@
+@model LokacijaViewModel
+
+<input type="hidden" asp-for="Id" />
+<div class="row g-3">
+    <div class="col-md-6">
+        <label asp-for="Naziv" class="form-label"></label>
+        <input asp-for="Naziv" class="form-control" />
+        <span asp-validation-for="Naziv" class="text-danger"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Adresa" class="form-label"></label>
+        <input asp-for="Adresa" class="form-control" />
+        <span asp-validation-for="Adresa" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Grad" class="form-label"></label>
+        <input asp-for="Grad" class="form-control" />
+        <span asp-validation-for="Grad" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="TipObjekta" class="form-label"></label>
+        <select asp-for="TipObjekta" asp-items="Html.GetEnumSelectList<TipObjekta>()" class="form-select"></select>
+    </div>
+    <div class="col-md-4">
+        @* Padajuća lista za odabir stranog ključa u ZAGLAVLJU složenog ekrana. *@
+        <label asp-for="VoditeljId" class="form-label"></label>
+        <select asp-for="VoditeljId" asp-items="@(ViewBag.Voditelji as SelectList)" class="form-select">
+            <option value="">-- bez voditelja --</option>
+        </select>
+        <span asp-validation-for="VoditeljId" class="text-danger"></span>
+    </div>
+    <div class="col-12">
+        <div class="form-check">
+            <input asp-for="Aktivna" class="form-check-input" />
+            <label asp-for="Aktivna" class="form-check-label"></label>
+        </div>
+    </div>
+</div>

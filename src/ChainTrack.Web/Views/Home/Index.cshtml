@@ -1,0 +1,44 @@
+@{
+    ViewData["Title"] = "Početna";
+}
+
+<div class="p-4 mb-4 bg-light rounded-3">
+    <h1 class="display-6">ChainTrack</h1>
+    <p class="lead mb-1">Sustav za evidenciju poslovanja lanca restorana.</p>
+    <p class="text-muted mb-0">
+        Informacijski sustavi (FER) &mdash; DZ3: Ugradnja odabrane arhitekture.
+        Rješenje je izvedeno u <strong>slojevitoj (višeslojnoj) arhitekturi</strong>:
+        prezentacijski sloj (ASP.NET Core MVC) &rarr; poslovni sloj (BLL) &rarr;
+        sloj za pristup podacima (DAL, EF Core).
+    </p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Lokacije i zalihe</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Složeni (master-detail) ekran</h6>
+                <p class="card-text">
+                    Zaglavlje je lokacija lanca, a detalji su stavke zalihe sastojaka.
+                    Uključuje navigaciju, pretraživanje, CRUD, padajuće liste za strani
+                    ključ te složenu validaciju.
+                </p>
+                <a asp-controller="Lokacije" asp-action="Index" class="btn btn-primary">Otvori ekran</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Zaposlenici</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Ekran šifrarnika</h6>
+                <p class="card-text">
+                    Evidencija zaposlenika s navigacijom i pretraživanjem, CRUD operacijama,
+                    padajućim listama te složenom validacijom OIB-a (kontrolna znamenka).
+                </p>
+                <a asp-controller="Zaposlenici" asp-action="Index" class="btn btn-primary">Otvori ekran</a>
+            </div>
+        </div>
+    </div>
+</div>

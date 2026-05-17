@@ -1,0 +1,107 @@
+@model PagedResult<Zaposlenik>
+@{
+    ViewData["Title"] = "Zaposlenici";
+    var pretraga = ViewBag.Pretraga as string;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Šifrarnik zaposlenika</h1>
+    <a asp-action="Create" class="btn btn-success">+ Novi zaposlenik</a>
+</div>
+<p class="text-muted">Navigacija, pretraživanje i CRUD nad zaposlenicima lanca.</p>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-sm-5 col-md-4">
+        <input type="text" name="pretraga" value="@pretraga" class="form-control"
+               placeholder="Pretraži po imenu, prezimenu ili OIB-u" />
+    </div>
+    <div class="col-sm-4 col-md-3">
+        <select name="lokacijaId" asp-items="@(ViewBag.Lokacije as SelectList)" class="form-select">
+            <option value="">-- sve lokacije --</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Traži</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Poništi</a>
+    </div>
+</form>
+
+@if (Model.UkupnoZapisa == 0)
+{
+    <div class="alert alert-info">Nema pronađenih zaposlenika.</div>
+}
+else
+{
+    <table class="table table-striped table-hover align-middle">
+        <thead>
+            <tr>
+                <th>Zaposlenik</th>
+                <th>OIB</th>
+                <th>Tip</th>
+                <th>Lokacija</th>
+                <th>Datum zaposlenja</th>
+                <th class="text-end">Plaća</th>
+                <th>Status</th>
+                <th class="text-end">Akcije</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var z in Model.Stavke)
+            {
+                <tr>
+                    <td>@z.PunoIme</td>
+                    <td><code>@z.Oib</code></td>
+                    <td>@(z.Tip?.Naziv ?? "-")</td>
+                    <td>@(z.Lokacija?.Naziv ?? "-")</td>
+                    <td>@z.DatumZaposlenja.ToString("dd.MM.yyyy.")</td>
+                    <td class="text-end">@z.Placa.ToString("0.00") &euro;</td>
+                    <td>
+                        @if (z.Status == StatusZaposlenika.AKTIVAN)
+                        {
+                            <span class="badge bg-success">Aktivan</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Neaktivan</span>
+                        }
+                    </td>
+                    <td class="text-end text-nowrap">
+                        <a asp-action="Details" asp-route-id="@z.Id" class="btn btn-sm btn-outline-secondary">Detalji</a>
+                        <a asp-action="Edit" asp-route-id="@z.Id" class="btn btn-sm btn-outline-primary">Uredi</a>
+                        @if (z.Status == StatusZaposlenika.AKTIVAN)
+                        {
+                            <form asp-action="Deaktiviraj" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@z.Id" />
+                                <button type="submit" class="btn btn-sm btn-outline-warning">Deaktiviraj</button>
+                            </form>
+                        }
+                        <form asp-action="Obrisi" method="post" class="d-inline"
+                              onsubmit="return confirm('Obrisati zaposlenika?');">
+                            <input type="hidden" name="id" value="@z.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Obriši</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center">
+        <small class="text-muted">Ukupno zapisa: @Model.UkupnoZapisa</small>
+        <nav>
+            <ul class="pagination mb-0">
+                <li class="page-item @(Model.ImaPrethodnu ? "" : "disabled")">
+                    <a class="page-link" asp-action="Index" asp-route-pretraga="@pretraga"
+                       asp-route-lokacijaId="@(ViewBag.LokacijaId)" asp-route-stranica="@(Model.Stranica - 1)">Prethodna</a>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">Stranica @Model.Stranica / @Model.UkupnoStranica</span>
+                </li>
+                <li class="page-item @(Model.ImaSljedecu ? "" : "disabled")">
+                    <a class="page-link" asp-action="Index" asp-route-pretraga="@pretraga"
+                       asp-route-lokacijaId="@(ViewBag.LokacijaId)" asp-route-stranica="@(Model.Stranica + 1)">Sljedeća</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+}

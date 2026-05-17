@@ -1,0 +1,101 @@
+@model LokacijaDetaljiViewModel
+@{
+    ViewData["Title"] = "Lokacija - " + Model.Zaglavlje.Naziv;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Složeni ekran: lokacija i zalihe</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary">&larr; Popis lokacija</a>
+</div>
+
+@* ===================== ZAGLAVLJE (MASTER) ===================== *@
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        Zaglavlje &mdash; podaci o lokaciji <span class="badge bg-light text-dark">master</span>
+    </div>
+    <div class="card-body">
+        <form asp-action="SpremiZaglavlje" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <partial name="_LokacijaZaglavljeForm" model="Model.Zaglavlje" />
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Spremi zaglavlje</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@* ===================== DETALJI ===================== *@
+<div class="card mb-4">
+    <div class="card-header bg-secondary text-white">
+        Zalihe sastojaka na lokaciji <span class="badge bg-light text-dark">detalji</span>
+    </div>
+    <div class="card-body">
+        @if (Model.Zalihe.Count == 0)
+        {
+            <p class="text-muted">Za ovu lokaciju još nema evidentiranih zaliha.</p>
+        }
+        else
+        {
+            <table class="table table-sm table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Sastojak</th>
+                        <th class="text-end">Količina</th>
+                        <th class="text-end">Min. razina</th>
+                        <th>Status zalihe</th>
+                        <th class="text-end">Akcija</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var z in Model.Zalihe)
+                    {
+                        <tr>
+                            <td>@z.Sastojak?.Naziv</td>
+                            <td class="text-end">@z.Kolicina.ToString("0.00")</td>
+                            <td class="text-end">@z.MinimalnaRazina.ToString("0.00")</td>
+                            <td>
+                                @if (z.IspodMinimuma())
+                                {
+                                    <span class="badge bg-danger">Niska zaliha</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">U redu</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <a asp-action="UrediZalihu" asp-route-id="@z.Id"
+                                   class="btn btn-sm btn-outline-primary">Uredi</a>
+                                <form asp-action="ObrisiZalihu" method="post" class="d-inline"
+                                      onsubmit="return confirm('Obrisati ovu stavku zalihe?');">
+                                    <input type="hidden" name="id" value="@z.Id" />
+                                    <input type="hidden" name="lokacijaId" value="@Model.Zaglavlje.Id" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Obriši</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+        <hr />
+        <h6 class="mb-3">Dodaj novu stavku zalihe</h6>
+        <form asp-action="DodajZalihu" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <partial name="_ZalihaForm" model="Model.NovaZaliha" />
+            <div class="mt-3">
+                <button type="submit" class="btn btn-success">Dodaj stavku</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<form asp-action="Obrisi" method="post" onsubmit="return confirm('Obrisati cijelu lokaciju?');">
+    <input type="hidden" name="id" value="@Model.Zaglavlje.Id" />
+    <button type="submit" class="btn btn-outline-danger">Obriši lokaciju</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
